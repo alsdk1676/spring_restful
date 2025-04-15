@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 자바의 인터페이스랑 연결 -->
+<mapper namespace="com.app.restful.mapper.PostMapper">
+
+    <select id="selectAll" resultType="PostDTO">
+        SELECT TP.ID, TP.POST_TITLE, TP.POST_CONTENT, TP.POST_READ_COUNT, TP.MEMBER_ID, TM.MEMBER_NAME
+        FROM TBL_POST TP
+        JOIN TBL_MEMBER TM
+        ON TP.MEMBER_ID = TM.ID
+    </select>
+
+    <select id="selectById" parameterType="Long" resultType="PostDTO">
+        SELECT TP.ID, TP.POST_TITLE, TP.POST_CONTENT, TP.POST_READ_COUNT, TP.MEMBER_ID, TM.MEMBER_NAME
+        FROM TBL_POST TP
+        JOIN TBL_MEMBER TM
+        ON TP.MEMBER_ID = TM.ID AND TP.ID = #{id}
+    </select>
+
+
+
+
+
+</mapper>

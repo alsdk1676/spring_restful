@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 자바의 인터페이스랑 연결 -->
+<mapper namespace="com.app.restful.mapper.MemberMapper">
+    <select id="select" parameterType="Long" resultType="MemberVO">
+        SELECT ID, MEMBER_EMAIL, MEMBER_NAME
+        FROM TBL_MEMBER
+        WHERE ID = #{id}
+    </select>
+
+
+
+
+</mapper>
