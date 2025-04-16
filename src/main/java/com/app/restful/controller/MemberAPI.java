@@ -10,7 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -22,11 +24,12 @@ public class MemberAPI {
 
     private final MemberService memberService;
 
-//    회원가입
+//    회원가입 (성공 시 or 실패 시 - flash : 세션을 공유하고 있을 때 사용)
     @Operation(summary = "회원가입", description = "회원가입을 할 수 있는 API")
     @ApiResponse(responseCode = "200", description = "회원가입 성공")
     @PostMapping("join")
     public MemberVO join(@RequestBody MemberVO memberVO) {
+
         memberService.join(memberVO);
         Optional<MemberVO> foundMember = memberService.getMemberInfo(memberVO.getId());
         if(foundMember.isPresent()) {
@@ -34,6 +37,11 @@ public class MemberAPI {
         }
         return new MemberVO();
     }
+
+//    회원가입 성공 시 or 실패 시
+//    Map<String, Object> response = new HashMap<>();
+//    response.put("message", "로그인 성공하였습니다.");
+//    return response
 
 //    회원정보 단일 조회
 //    url 파라미터 : 모든 컨트롤러에서 사용이 가능하지만 보통 rest에서 사용된다.
@@ -80,29 +88,25 @@ public class MemberAPI {
             in = ParameterIn.PATH,
             required = true
     )
-    @PutMapping("member/{id}")
-    public MemberVO modify(@PathVariable Long id, @RequestBody MemberVO memberVO) {
-        memberVO.setId(id);
+//    @PutMapping("member/{id}")
+    @PutMapping("modify")
+    public void modify(@RequestBody MemberVO memberVO) {
+//        memberVO.setId(id);
         memberService.modify(memberVO);
-        Optional<MemberVO> foundMember = memberService.getMemberInfo(id);
-        if(foundMember.isPresent()) {
-            return foundMember.get();
-        }
-        return new MemberVO();
+//        Optional<MemberVO> foundMember = memberService.getMemberInfo(id);
+//        if(foundMember.isPresent()) {
+//            return foundMember.get();
+//        }
+//        return new MemberVO();
     }
 
 //    회원 탈퇴
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 할 수 있는 API")
     @ApiResponse(responseCode = "200", description = "회원탈퇴 성공")
-    @Parameter(
-            name = "id",
-            description = "회원 번호",
-            schema = @Schema(type = "number"),
-            in = ParameterIn.PATH,
-            required = true
-    )
-    @DeleteMapping("member/{id}")
-    public void remove(@PathVariable Long id) {
+    @DeleteMapping("withdraw/{id}")
+    public void withdraw(@PathVariable Long id) {
+//        세션에 저장된 회원의 id
+//        Long memberId = 1L;
         memberService.withdraw(id);
     }
 

@@ -13,7 +13,7 @@ public interface MemberService {
 //    회원정보 전체 조회
     public List<MemberVO> getMembers();
 
-//    회원정보 조회
+//    회원정보 조회 (login)
     public Optional<MemberVO> getMemberInfo(Long id);
 
 //    회원정보 수정
