@@ -17,6 +17,32 @@
         ON TP.MEMBER_ID = TM.ID AND TP.ID = #{id}
     </select>
 
+    <insert id="insert" parameterType="PostVO">
+        <selectKey keyProperty="id" order="BEFORE" resultType="Long">
+            SELECT SEQ_POST.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_POST (ID, POST_TITLE, POST_CONTENT, MEMBER_ID)
+        VALUES (#{id}, #{postTitle}, #{postContent}, #{memberId})
+    </insert>
+
+    <update id="update" parameterType="PostVO">
+        UPDATE TBL_POST
+        SET POST_TITLE = #{postTitle}, POST_CONTENT = #{postContent}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM TBL_POST
+        WHERE ID = #{id}
+    </delete>
+
+    <delete id="deleteAll" parameterType="Long">
+        DELETE FROM TBL_POST
+        WHERE MEMBER_ID = #{memberId}
+    </delete>
+
+
+
 
 
 

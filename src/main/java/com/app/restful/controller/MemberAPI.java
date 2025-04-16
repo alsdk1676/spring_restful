@@ -2,13 +2,15 @@ package com.app.restful.controller;
 
 import com.app.restful.domain.MemberVO;
 import com.app.restful.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,7 +22,30 @@ public class MemberAPI {
 
     private final MemberService memberService;
 
+//    회원가입
+    @Operation(summary = "회원가입", description = "회원가입을 할 수 있는 API")
+    @ApiResponse(responseCode = "200", description = "회원가입 성공")
+    @PostMapping("join")
+    public MemberVO join(@RequestBody MemberVO memberVO) {
+        memberService.join(memberVO);
+        Optional<MemberVO> foundMember = memberService.getMemberInfo(memberVO.getId());
+        if(foundMember.isPresent()) {
+            return foundMember.get();
+        }
+        return new MemberVO();
+    }
+
+//    회원정보 단일 조회
 //    url 파라미터 : 모든 컨트롤러에서 사용이 가능하지만 보통 rest에서 사용된다.
+    @Operation(summary = "회원 정보 조회", description = "회원 1명의 정보를 전체 조회할 수 있는 API")
+    @ApiResponse(responseCode = "200", description = "회원정보 조회 성공")
+    @Parameter(
+            name = "id",
+            description = "회원 번호",
+            schema = @Schema(type = "number"),
+            in = ParameterIn.PATH,
+            required = true
+    )
     @GetMapping("member/{id}")
     public MemberVO getMember(@PathVariable Long id) { // url 파라미터 값을 key와 value로 매핑
         Optional<MemberVO> foundMember = memberService.getMemberInfo(id); // 파라미터 값 넘겨줌
@@ -36,4 +61,50 @@ public class MemberAPI {
 //        그래서 대부분 Optional로 안보낼때가 많지만 상세하게 전달할 때에는 Optional로 전달한다.
         return new MemberVO();
     }
+
+//    회원정보 전체 조회
+    @Operation(summary = "전체 회원정보 조회", description = "전체 회원 정보를 조회할 수 있는 API")
+    @ApiResponse(responseCode = "200", description = "전체 회원정보 조회 성공")
+    @GetMapping("members")
+    public List<MemberVO> getMembers() {
+        return memberService.getMembers();
+    }
+
+//    회원정보 수정
+    @Operation(summary = "회원 정보 수정", description = "회원 정보를 수정할 수 있는 API")
+    @ApiResponse(responseCode = "200", description = "회원정보 수정 성공")
+    @Parameter(
+            name = "id",
+            description = "회원 번호",
+            schema = @Schema(type = "number"),
+            in = ParameterIn.PATH,
+            required = true
+    )
+    @PutMapping("member/{id}")
+    public MemberVO modify(@PathVariable Long id, @RequestBody MemberVO memberVO) {
+        memberVO.setId(id);
+        memberService.modify(memberVO);
+        Optional<MemberVO> foundMember = memberService.getMemberInfo(id);
+        if(foundMember.isPresent()) {
+            return foundMember.get();
+        }
+        return new MemberVO();
+    }
+
+//    회원 탈퇴
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴 할 수 있는 API")
+    @ApiResponse(responseCode = "200", description = "회원탈퇴 성공")
+    @Parameter(
+            name = "id",
+            description = "회원 번호",
+            schema = @Schema(type = "number"),
+            in = ParameterIn.PATH,
+            required = true
+    )
+    @DeleteMapping("member/{id}")
+    public void remove(@PathVariable Long id) {
+        memberService.withdraw(id);
+    }
+
+
 }
