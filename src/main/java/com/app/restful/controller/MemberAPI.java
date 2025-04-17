@@ -71,12 +71,12 @@ public class MemberAPI {
     }
 
 //    회원정보 전체 조회
-    @Operation(summary = "전체 회원정보 조회", description = "전체 회원 정보를 조회할 수 있는 API")
-    @ApiResponse(responseCode = "200", description = "전체 회원정보 조회 성공")
-    @GetMapping("members")
-    public List<MemberVO> getMembers() {
-        return memberService.getMembers();
-    }
+//    @Operation(summary = "전체 회원정보 조회", description = "전체 회원 정보를 조회할 수 있는 API")
+//    @ApiResponse(responseCode = "200", description = "전체 회원정보 조회 성공")
+//    @GetMapping("members")
+//    public List<MemberVO> getMembers() {
+//        return memberService.getMembers();
+//    }
 
 //    회원정보 수정
     @Operation(summary = "회원 정보 수정", description = "회원 정보를 수정할 수 있는 API")

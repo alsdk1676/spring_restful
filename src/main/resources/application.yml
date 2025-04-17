@@ -17,9 +17,16 @@ spring:
       jdbc-url: jdbc:oracle:thin:@//localhost:1521/XE
       username: hr
       password: 1234
+  ssl:
+    enabled: true
   mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+    cors:
+      mappings:
+        "/**":
+          allowed-origins: "http://localhost:3000"
+          allowed-methods: "*"
+          allowed-headers: "*"
+          allow-credentials: true
 
 
 thymeleaf:

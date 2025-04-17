@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequestMapping("/posts/api/*")
 @RequiredArgsConstructor
 @Slf4j
-public class PostController {
+public class PostAPI {
 
     public final PostService postService;
 
@@ -59,10 +59,10 @@ public class PostController {
         // 프론트 => 백 PostVO postVO 어디 영역에서 오는거 ? RequestBody에서 들고옴
     public PostDTO write(@RequestBody PostVO postVO){
         log.info("{}", postVO);
-        postService.write(postVO); // 아이디 없음 (SEQ로 증가시키기 때문에) => SEQ를 먼저 증가시키기 //시크릿키 => id 생김
+        postService.write(postVO); // 아이디 없음 (SEQ로 증가시키기 때문에) => SEQ를 먼저 증가시키기 => 시크릿키 : id 생김
 //        작성 후에는 리다이렉트, 페이지에 관여하지 않기 떄문에 리다이렉트 못시킴 => 작성 완료된 상태값과 데이터 넘겨주기
 //        데이터 넘겨주기 위해 작성한 글 다시 가져오기
-        Optional<PostDTO> foundPost = postService.getPost(postVO.getId()); // null값, SEQ로 해결하기
+        Optional<PostDTO> foundPost = postService.getPost(postVO.getId()); // null값, SEQ로 해결하기 => selectKey로 다음에 작성될 글의 id 생성
         if(foundPost.isPresent()){
             return foundPost.get();
         }
@@ -93,7 +93,7 @@ public class PostController {
     }
 
 
-//    게시글 삭제
+//    게시글 삭제 (@PostMapping도 가능!)
     @Operation(summary = "게시글 삭제", description = "게시글을 삭제할 수 있는 API")
     @ApiResponse(responseCode = "200", description = "게시글 삭제 성공") // 선택사항
     @Parameter(
