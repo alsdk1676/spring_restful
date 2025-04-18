@@ -27,6 +27,10 @@ spring:
           allowed-methods: "*"
           allowed-headers: "*"
           allow-credentials: true
+api :
+  base-url : "https://apis.data.go.kr/B551011/KorPetTourService"
+  area-based-list : "/areaBasedList"
+  service-key : "ifySbrAfQ6xzLynwNtMTRIyjNfECuZkN3y%2F3345uKqcXyU3jN4dbK6nv2oxAhIuBTIj5PY7%2FskSuI6u3%2BfdG3A%3D%3D"
 
 
 thymeleaf:
