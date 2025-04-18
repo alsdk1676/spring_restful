@@ -1,5 +1,7 @@
 package com.app.restful.service;
 
+import com.app.restful.domain.CongestionData;
+import com.app.restful.domain.CongestionResponse;
 import com.app.restful.domain.PetTourDTO;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,12 +9,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +92,40 @@ public class OpenApiService {
     }
 
 //    resttemplates
+    @Value("${api.base-url2}")
+    private String baseUrl2;
+
+    @Value("${api.congestion-20171231}")
+    private String congestion2017311;
+
+    public List<CongestionData> fetchData2() throws IOException, URISyntaxException {
+        RestTemplate restTemplate = new RestTemplate();
+
+//        URL
+        String url = baseUrl2 + congestion2017311;
+        String fullUrl = UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("serviceKey", serviceKey)
+                .queryParam("page", 1)
+                .queryParam("perPage", 10)
+                .queryParam("_type", "json")
+                .build()
+                .toString();
+
+//        log.info("fetchData2 최종 요청 url : {}", fullUrl);
+        URI uri = new URI(fullUrl);
+
+//        Entity : key=value 필요한 값들을 들고 올 수 있음 (body : 응답객체)
+//        ResponseEntity<CongestionResponse> response = restTemplate.getForEntity(uri, CongestionResponse.class); // 어떤 클래스로 매핑?
+        CongestionResponse response = restTemplate.getForObject(uri, CongestionResponse.class); // 어떤 클래스로 매핑?
+//        클래스니까 getter, setter로 가져오기
+        log.info("{}", response);
+//        log.info("body : {}", response.getBody());
+        List<CongestionData> datas = response.getData();
+        return datas;
+
+
+    }
+
 
 
 }
